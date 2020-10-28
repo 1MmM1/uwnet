@@ -57,9 +57,27 @@ matrix im2col(image im, int size, int stride)
 
     // TODO: 5.1
     // Fill in the column matrix with patches from the image
-
-
-
+    int center = (size - 1) / 2;
+    int rown = 0;
+    int coln = 0;
+    for (i = 0; i < im.w; i += stride) { // iterate through rows of image
+        for (j = 0; j < im.h; j += stride) { // iterate through columns of image
+            for (k = 0; k < im.c; k++) { // iterate through channels
+                for (int m = 0; m < size; m++) { // iterate through columns of convolution
+                    for (int n = 0; n < size; n++) { // iterate through rows of convolution
+                        if (i - center + n < 0 || j - center + m < 0 || i - center + n >= im.w || j - center + m >= im.h) {
+                            col.data[rown * col.cols + coln] = 0;
+                        } else {
+                            col.data[rown * col.cols + coln] = get_pixel(im, i - center + n, j - center + m, k);
+                        }
+                        rown++;
+                    }
+                }
+            }
+            coln++;
+            rown = 0;
+        }
+    }
     return col;
 }
 
@@ -78,9 +96,25 @@ image col2im(int width, int height, int channels, matrix col, int size, int stri
 
     // TODO: 5.2
     // Add values into image im from the column matrix
-    
-
-
+    int center = (size - 1) / 2;
+    int rown = 0;
+    int coln = 0;
+    for (i = 0; i < im.w; i += stride) { // iterate through rows of image
+        for (j = 0; j < im.h; j += stride) { // iterate through columns of image
+            for (k = 0; k < im.c; k++) { // iterate through channels
+                for (int m = 0; m < size; m++) { // iterate through columns of convolution
+                    for (int n = 0; n < size; n++) { // iterate through rows of convolution
+                        if (i - center + n < 0 && j - center + m < 0 && i - center + n >= im.w && j - center + m >= im.h) {
+                            set_pixel(im, i - center + n, j - center + m, k, col.data[rown * col.cols + coln] + get_pixel(im, i - center + n, j - center + m, k));
+                        }
+                        rown++;
+                    }
+                }
+            }
+            coln++;
+            rown = 0;
+        }
+    }
     return im;
 }
 
