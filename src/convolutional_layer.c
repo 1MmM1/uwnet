@@ -60,15 +60,18 @@ matrix im2col(image im, int size, int stride)
     int center = (size - 1) / 2;
     int rown = 0;
     int coln = 0;
+    int m, n, imgr, imgc;
     for (i = 0; i < im.h; i += stride) { // iterate through rows of image
         for (j = 0; j < im.w; j += stride) { // iterate through columns of image
             for (k = 0; k < im.c; k++) { // iterate through channels
-                for (int m = 0; m < size; m++) { // iterate through rows of convolution
-                    for (int n = 0; n < size; n++) { // iterate through columns of convolution
-                        if (i - center + m < 0 || j - center + n < 0 || i - center + m >= im.h || j - center + n >= im.w) {
+                for (m = 0; m < size; m++) { // iterate through rows of convolution
+                    for (n = 0; n < size; n++) { // iterate through columns of convolution
+                        imgr = i - center + m;
+                        imgc = j - center + n;
+                        if (imgr < 0 || imgc < 0 || imgr >= im.h || imgc >= im.w) {
                             col.data[rown * col.cols + coln] = 0;
                         } else {
-                            col.data[rown * col.cols + coln] = get_pixel(im, i - center + m, j - center + n, k);
+                            col.data[rown * col.cols + coln] = get_pixel(im, imgc, imgr, k);
                         }
                         rown++;
                     }
@@ -99,13 +102,16 @@ image col2im(int width, int height, int channels, matrix col, int size, int stri
     int center = (size - 1) / 2;
     int rown = 0;
     int coln = 0;
+    int m, n, imgr, imgc;
     for (i = 0; i < im.h; i += stride) { // iterate through rows of image
         for (j = 0; j < im.w; j += stride) { // iterate through columns of image
             for (k = 0; k < im.c; k++) { // iterate through channels
-                for (int m = 0; m < size; m++) { // iterate through rows of convolution
-                    for (int n = 0; n < size; n++) { // iterate through columns of convolution
-                        if (i - center + m < 0 && j - center + n < 0 && i - center + m >= im.h && j - center + n >= im.w) {
-                            set_pixel(im, i - center + m, j - center + n, k, col.data[rown * col.cols + coln] + get_pixel(im, i - center + m, j - center + n, k));
+                for (m = 0; m < size; m++) { // iterate through rows of convolution
+                    for (n = 0; n < size; n++) { // iterate through columns of convolution
+                        imgr = i - center + m;
+                        imgc = j - center + n;
+                        if (imgr >= 0 && imgc >= 0 && imgr < im.h && imgc < im.w) {
+                          set_pixel(im, imgc, imgr, k, col.data[rown * col.cols + coln] + get_pixel(im, imgc, imgr, k));
                         }
                         rown++;
                     }
@@ -235,4 +241,3 @@ layer make_convolutional_layer(int w, int h, int c, int filters, int size, int s
     l.update   = update_convolutional_layer;
     return l;
 }
-
