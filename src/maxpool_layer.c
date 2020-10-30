@@ -63,7 +63,7 @@ matrix backward_maxpool_layer(layer l, matrix dy)
     // similar to the forward method in structure.
     int center = (l.size - 1) / 2;
     int cell = 0;
-    int b, i, j, k, m, n, maxdex, imgr, imgc;
+    int b, i, j, k, m, n, maxdex, currdex, imgr, imgc;
     for (b = 0; b < in.rows; b++) { // iterate through channels
         for (k = 0; k < l.channels; k++) { // iterate through channels
             for (i = 0; i < l.height; i += l.stride) { // iterate through rows of image
@@ -73,13 +73,9 @@ matrix backward_maxpool_layer(layer l, matrix dy)
                         for (n = 0; n < l.size; n++) { // iterate through columns of convolution
                             imgr = i - center + m;
                             imgc = j - center + n;
+                            currdex = b * in.cols + imgr * l.width + imgc + k * l.height * l.width;
                             if (imgr >= 0 && imgc >= 0 && imgr < l.height && imgc < l.width) {
-                                if (in.data[b * in.cols + imgr * l.width + imgc + k * l.height * l.width] > in.data[maxdex]) {
-                                    dx.data[maxdex] = 0;
-                                    maxdex = b * in.cols + imgr * l.width + imgc + k * l.height * l.width;
-                                } else {
-                                    dx.data[b * in.cols + imgr * l.width + imgc + k * l.height * l.width] = 0;
-                                }
+                                maxdex = in.data[currdex] > in.data[maxdex] ? currdex : maxdex;
                             }
                         }
                     }
