@@ -68,7 +68,12 @@ matrix backward_maxpool_layer(layer l, matrix dy)
         for (k = 0; k < l.channels; k++) { // iterate through channels
             for (i = 0; i < l.height; i += l.stride) { // iterate through rows of image
                 for (j = 0; j < l.width; j += l.stride) { // iterate through columns of image
-                    maxdex = b * in.cols + i * l.width + j + k * l.height * l.width;
+                    // initialize max index to top left of convolution
+                    imgr = i - center;
+                    imgc = j - center;
+                    currdex = b * in.cols + imgr * l.width + imgc + k * l.height * l.width;
+                    maxdex = imgr >= 0 && imgc >= 0 && imgr < l.height && imgc < l.width ? 
+                                currdex : b * in.cols + i * l.width + j + k * l.height * l.width;
                     for (m = 0; m < l.size; m++) { // iterate through rows of convolution
                         for (n = 0; n < l.size; n++) { // iterate through columns of convolution
                             imgr = i - center + m;
