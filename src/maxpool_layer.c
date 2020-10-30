@@ -61,9 +61,34 @@ matrix backward_maxpool_layer(layer l, matrix dy)
     // TODO: 6.2 - find the max values in the input again and fill in the
     // corresponding delta with the delta from the output. This should be
     // similar to the forward method in structure.
-
-
-
+    int center = (l.size - 1) / 2;
+    int cell = 0;
+    int b, i, j, k, m, n, maxdex, imgr, imgc;
+    for (b = 0; b < in.rows; b++) { // iterate through channels
+        for (k = 0; k < l.channels; k++) { // iterate through channels
+            for (i = 0; i < l.height; i += l.stride) { // iterate through rows of image
+                for (j = 0; j < l.width; j += l.stride) { // iterate through columns of image
+                    maxdex = b * in.cols + i * l.width + j + k * l.height * l.width;
+                    for (m = 0; m < l.size; m++) { // iterate through rows of convolution
+                        for (n = 0; n < l.size; n++) { // iterate through columns of convolution
+                            imgr = i - center + m;
+                            imgc = j - center + n;
+                            if (imgr >= 0 && imgc >= 0 && imgr < l.height && imgc < l.width) {
+                                if (in.data[b * in.cols + imgr * l.width + imgc + k * l.height * l.width] > in.data[maxdex]) {
+                                    dx.data[maxdex] = 0;
+                                    maxdex = b * in.cols + imgr * l.width + imgc + k * l.height * l.width;
+                                } else {
+                                    dx.data[b * in.cols + imgr * l.width + imgc + k * l.height * l.width] = 0;
+                                }
+                            }
+                        }
+                    }
+                    dx.data[maxdex] += dy.data[cell / dy.cols + cell % dy.cols];
+                    cell++;
+                }
+            }
+        }
+    }
     return dx;
 }
 
