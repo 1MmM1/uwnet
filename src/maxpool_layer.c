@@ -23,23 +23,23 @@ matrix forward_maxpool_layer(layer l, matrix in)
     // TODO: 6.1 - iterate over the input and fill in the output with max values
     int center = (l.size - 1) / 2;
     int cell = 0;
-    float max = -FLT_MAX;
+    float max;
     int b, i, j, k, m, n, imgr, imgc;
     for (b = 0; b < in.rows; b++) { // iterate through images in this batch
         for (k = 0; k < l.channels; k++) { // iterate through channels
             for (i = 0; i < l.height; i += l.stride) { // iterate through rows of image
                 for (j = 0; j < l.width; j += l.stride) { // iterate through columns of image
-                    max = in.data[i * l.height + j + k * l.height * l.width];
+                    max = in.data[b * in.cols + i * l.width + j + k * l.height * l.width];
                     for (m = 0; m < l.size; m++) { // iterate through rows of convolution
                         for (n = 0; n < l.size; n++) { // iterate through columns of convolution
                             imgr = i - center + m;
                             imgc = j - center + n;
                             if (imgr >= 0 && imgc >= 0 && imgr < l.height && imgc < l.width) {
-                                max = fmax(max, in.data[b * in.cols + imgr * l.height + imgc + k * l.height * l.width]);
+                                max = fmax(max, in.data[b * in.cols + imgr * l.width + imgc + k * l.height * l.width]);
                             }
                         }
                     }
-                    out.data[cell / l.stride * outh + cell % l.stride] = max;
+                    out.data[cell / out.cols + cell % out.cols] = max;
                     cell++;
                 }
             }
