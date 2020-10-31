@@ -22,25 +22,25 @@ matrix forward_maxpool_layer(layer l, matrix in)
 
     // TODO: 6.1 - iterate over the input and fill in the output with max values
     int center = (l.size - 1) / 2;
-    int cell = 0;
     float max;
     int b, i, j, k, m, n, imgr, imgc;
     for (b = 0; b < in.rows; b++) { // iterate through images in this batch
         for (k = 0; k < l.channels; k++) { // iterate through channels
-            for (i = 0; i < l.height; i += l.stride) { // iterate through rows of image
-                for (j = 0; j < l.width; j += l.stride) { // iterate through columns of image
-                    max = in.data[b * in.cols + i * l.width + j + k * l.height * l.width];
+            for (i = 0; i < outh; i++) { // iterate through rows of image
+                for (j = 0; j < outw; j++) { // iterate through columns of image
+                    imgc = j * l.stride;
+                    imgr = i * l.stride;
+                    max = in.data[b * in.cols + imgr * l.width + imgc + k * l.height * l.width];
                     for (m = 0; m < l.size; m++) { // iterate through rows of convolution
                         for (n = 0; n < l.size; n++) { // iterate through columns of convolution
-                            imgr = i - center + m;
-                            imgc = j - center + n;
+                            imgr = i * l.stride - center + m;
+                            imgc = j * l.stride - center + n;
                             if (imgr >= 0 && imgc >= 0 && imgr < l.height && imgc < l.width) {
                                 max = fmax(max, in.data[b * in.cols + imgr * l.width + imgc + k * l.height * l.width]);
                             }
                         }
                     }
-                    out.data[cell / out.cols + cell % out.cols] = max;
-                    cell++;
+                    out.data[b * out.cols + k * outh * outw + i * outw + j] = max;
                 }
             }
         }
@@ -62,30 +62,26 @@ matrix backward_maxpool_layer(layer l, matrix dy)
     // corresponding delta with the delta from the output. This should be
     // similar to the forward method in structure.
     int center = (l.size - 1) / 2;
-    int cell = 0;
+    float max;
     int b, i, j, k, m, n, maxdex, currdex, imgr, imgc;
     for (b = 0; b < in.rows; b++) { // iterate through channels
         for (k = 0; k < l.channels; k++) { // iterate through channels
-            for (i = 0; i < l.height; i += l.stride) { // iterate through rows of image
-                for (j = 0; j < l.width; j += l.stride) { // iterate through columns of image
+            for (i = 0; i < outh; i++) { // iterate through rows of image
+                for (j = 0; j < outw; j++) { // iterate through columns of image
                     // initialize max index to top left of convolution
-                    imgr = i - center;
-                    imgc = j - center;
-                    currdex = b * in.cols + imgr * l.width + imgc + k * l.height * l.width;
-                    maxdex = imgr >= 0 && imgc >= 0 && imgr < l.height && imgc < l.width ? 
-                                currdex : b * in.cols + i * l.width + j + k * l.height * l.width;
+                    max = -FLT_MAX;
                     for (m = 0; m < l.size; m++) { // iterate through rows of convolution
                         for (n = 0; n < l.size; n++) { // iterate through columns of convolution
-                            imgr = i - center + m;
-                            imgc = j - center + n;
-                            currdex = b * in.cols + imgr * l.width + imgc + k * l.height * l.width;
-                            if (imgr >= 0 && imgc >= 0 && imgr < l.height && imgc < l.width) {
-                                maxdex = in.data[currdex] > in.data[maxdex] ? currdex : maxdex;
+                            imgc = j * l.stride - center + n;
+                            imgr = i * l.stride - center + m;
+                            currdex = b * in.cols + imgr * l.width + imgc + k * l.height * l.width;                 
+                            if (imgr >= 0 && imgc >= 0 && imgr < l.height && imgc < l.width && in.data[currdex] > max) {
+                                maxdex = currdex; 
+                                max = in.data[currdex];
                             }
                         }
                     }
-                    dx.data[maxdex] += dy.data[cell / dy.cols + cell % dy.cols];
-                    cell++;
+                    dx.data[maxdex] += dy.data[b * dy.cols + k * outh*outw + i * outw + j];
                 }
             }
         }
