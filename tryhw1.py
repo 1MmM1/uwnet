@@ -69,8 +69,9 @@ print("test accuracy:     %f", accuracy_net(m, test))
 #   Fully connected layer: (1)(256)(10) = 2560 ops
 #   Total = 221184 + 294912 + 294912 + 294912 + 2560 = 1108040
 # To build my fully connected layer, I knew that I had an input of 3072 (because our images are 32x32x3). I also knew that 
-# I should have a total of 5 layers and that my final number of operations had to be about 1108040. To make sure that the
-# hidden layers were as large as possible, I made them all the same size.
+# I should have a total of 5 layers and that my final number of operations had to be about 1108040. I decided to make 
+# each hidden layer take the same amount of operations (in lecture it was mentioned that it was good practice to use a 
+# similar amout of operations at each layer). This meant that all the hidden layers would be relatively the same size.
 #   First fully connected layer: 3072 --> n
 #   Second fully connected layer: n --> n
 #   Third fully connected layer: n --> n
