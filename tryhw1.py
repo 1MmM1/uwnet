@@ -17,6 +17,19 @@ def conv_net():
             make_activation_layer(SOFTMAX)]
     return make_net(l)
 
+def conn_net():
+    l = [   make_connected_layer(3072, 280),
+            make_activation_layer(RELU),
+            make_connected_layer(280, 280),
+            make_activation_layer(RELU),
+            make_connected_layer(280, 280),
+            make_activation_layer(RELU),
+            make_connected_layer(280, 280),
+            make_activation_layer(RELU),
+            make_connected_layer(280, 10),
+            make_activation_layer(SOFTMAX)]
+    return make_net(l)
+
 print("loading data...")
 train = load_image_classification_data("cifar/cifar.train", "cifar/cifar.labels")
 test  = load_image_classification_data("cifar/cifar.test",  "cifar/cifar.labels")
@@ -30,7 +43,8 @@ rate = .01
 momentum = .9
 decay = .005
 
-m = conv_net()
+# m = conv_net()
+m = conn_net()
 print("training...")
 train_image_classifier(m, train, batch, iters, rate, momentum, decay)
 print("done")
@@ -44,4 +58,3 @@ print("test accuracy:     %f", accuracy_net(m, test))
 # Why are you seeing these results? Speculate based on the information you've gathered and what you know about DL and ML.
 # Your answer:
 #
-
