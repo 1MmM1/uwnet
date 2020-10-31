@@ -56,8 +56,9 @@ print("test accuracy:     %f", accuracy_net(m, test))
 # top right corner of an image are usually more related to the pixels around it than the pixels in the bottom left corner.
 # Fully connected layers try to take in all the information and so they might be confused because they are taking in the
 # information from all the pixels in the image instead of just the spatially relevent ones. Convolutional networks are able
-# to only focus on the more relevent ones and thus it makese sense that it's more accurate. For more information on how I
-# determinend my arcitecture for the fully connected layers, see below:
+# to only focus on the more relevent ones and thus it makese sense that it's more accurate. Because of what we had talked
+# about in lecture, I was expecting that the convnet would perform better. Being not only better, but 13% better only further
+# confirms this. For more information on how I determinend my arcitecture for the fully connected layers, see below:
 
 # To create the fully connected network, I first calculated how many operations happened in one forward pass of the convnet, 
 # which amounted to 1108040, which is about 1.1 million. The breakdown of my calculations are below:
@@ -76,6 +77,11 @@ print("test accuracy:     %f", accuracy_net(m, test))
 #   Fourth fully connected layer: n --> n
 #   Last fully connected layer: n --> 10
 # To find the value of n, I made a polynomial 3n^2 + 3082n = 1108040 by adding up the number of operations at each layer. I
-# then solved for n, which came out to be around 280.
+# then solved for n, which came out to be around 280. This resulted in the following network arcitecture:
+#   First fully connected layer: 3072 --> 280
+#   Second fully connected layer: 280 --> 280
+#   Third fully connected layer: 280 --> 280
+#   Fourth fully connected layer: 280 --> 280
+#   Last fully connected layer: 280 --> 10
 
 
