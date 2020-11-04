@@ -49,12 +49,12 @@ matrix normalize(matrix x, matrix m, matrix v, int groups)
 {
     matrix norm = make_matrix(x.rows, x.cols);
     // TODO: 7.2 - Normalize x
-    float eps = 0.00001f;
+    float epsilon = 0.00001f;
     int n = x.cols / groups;
     int i, j;
     for(i = 0; i < x.rows; i++){
         for(j = 0; j < x.cols; j++){
-            norm.data[i * x.cols + j] = (x.data[i * x.cols + j] - m.data[j / n]) / sqrt(v.data[j / n]);
+            norm.data[i * x.cols + j] = (x.data[i * x.cols + j] - m.data[j / n]) / sqrt(v.data[j / n] + epsilon);
         }
     }
     return norm;
