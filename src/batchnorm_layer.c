@@ -114,6 +114,14 @@ matrix delta_variance(matrix d, matrix x, matrix m, matrix v)
     int groups = m.cols;
     matrix dv = make_matrix(1, groups);
     // TODO 7.4 - Calculate dL/dv
+    int n = d.cols / groups;
+    int i, j;
+    for(i = 0; i < d.rows; i++){
+        for(j = 0; j < d.cols; j++){
+            dv.data[j / n] += d.data[i * d.cols + j] * (x.data[i * d.cols + j] - m.data[j / n])
+                                * -0.5 * pow(v.data[j / n] + epsilon, -1.5);
+        }
+    }
     return dv;
 }
 
