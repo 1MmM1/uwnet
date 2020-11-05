@@ -3,6 +3,8 @@
 #include <assert.h>
 #include "uwnet.h"
 
+float epsilon = 0.00001f;
+
 // Take mean of matrix x over rows and spatial dimension
 // matrix x: matrix with data
 // int groups: number of distinct means to take, usually equal to # outputs
@@ -49,7 +51,6 @@ matrix normalize(matrix x, matrix m, matrix v, int groups)
 {
     matrix norm = make_matrix(x.rows, x.cols);
     // TODO: 7.2 - Normalize x
-    float epsilon = 0.00001f;
     int n = x.cols / groups;
     int i, j;
     for(i = 0; i < x.rows; i++){
@@ -97,6 +98,13 @@ matrix delta_mean(matrix d, matrix v)
     int groups = v.cols;
     matrix dm = make_matrix(1, groups);
     // TODO 7.3 - Calculate dL/dm
+    int n = d.cols / groups;
+    int i, j;
+    for(i = 0; i < d.rows; i++){
+        for(j = 0; j < d.cols; j++){
+            dm.data[j / n] += d.data[i * d.cols + j] * -1 / sqrt(v.data[j / n] + epsilon);
+        }
+    }
     return dm;
 }
 
