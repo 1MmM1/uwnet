@@ -129,13 +129,14 @@ matrix delta_batch_norm(matrix d, matrix dm, matrix dv, matrix m, matrix v, matr
 {
     matrix dx = make_matrix(d.rows, d.cols);
     // TODO 7.5 - Calculate dL/dx
-    int n = d.cols / m.cols;
+    int group_size = d.cols / m.cols;
+    int n = d.rows * d.cols / m.cols;
     int i, j;
     for(i = 0; i < d.rows; i++){
         for(j = 0; j < d.cols; j++){
-            dx.data[i * d.cols + j] = d.data[i * d.cols + j] / sqrt(v.data[j / n] + epsilon)
-                                    + dv.data[j / n] * 2 * (x.data[i * d.cols + j] - m.data[j / n]) / n
-                                    + dm.data[j / n] / n;
+            dx.data[i * d.cols + j] = d.data[i * d.cols + j] / sqrt(v.data[j / group_size] + epsilon)
+                                    + dv.data[j / group_size] * 2 * (x.data[i * d.cols + j] - m.data[j / group_size]) / n
+                                    + dm.data[j / group_size] / n;
         }
     }
     return dx;
