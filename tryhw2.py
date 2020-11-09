@@ -36,8 +36,9 @@ print("evaluating model...")
 print("training accuracy: %f", accuracy_net(m, train))
 print("test accuracy:     %f", accuracy_net(m, test))
 
-# How accurate is the fully connected network vs the convnet when they use similar number of operations?
-# Why are you seeing these results? Speculate based on the information you've gathered and what you know about DL and ML.
+# First, train the conv_net as usual. Then try it with batchnorm. Does it do better??
 # Your answer:
 #
+# In class we learned about annealing your learning rate to get better convergence. We ALSO learned that with batch normalization you can use larger learning rates because it's more stable. Increase the starting learning rate to .1 and train for multiple rounds with successively smaller learning rates. Using just this model, what's the best performance you can get?
+# Your answer:
 
