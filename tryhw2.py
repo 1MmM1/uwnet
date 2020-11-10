@@ -48,4 +48,14 @@ print("test accuracy:     %f", accuracy_net(m, test))
 # 7.6 Question: What do you notice about training the convnet with/without batch normalization? How
 # does it affect convergence? How does it affect what magnitude of learning rate you can use? Write
 # down any observations from your experiments:
-# TODO: Your answer
+# When trained as with no batch normalization layers, we get a training accuracy of
+# 0.397599995136261 (39.8%) and test accuracy of 0.4000999927520752 (40%).
+# When trained with a batch normalization layer immediately after each convolution, we
+# get a training accuracy of 0.559719979763031 (56%) and a test accuracy of
+# 0.5454999804496765 (54.5%)
+# We can see just by comparing the training accuracies and test accuracies that adding
+# batch normalization makes our model do better (i.e. achieve a better train and test
+# accuracy).
+
+# When using a learning rate of 0.1, we get training accuracy of 0.5148199796676636 (51.4%) and
+# test accuracy of 0.5060999989509583 (50.6%).
