@@ -39,6 +39,13 @@ print("test accuracy:     %f", accuracy_net(m, test))
 # First, train the conv_net as usual. Then try it with batchnorm. Does it do better??
 # Your answer:
 #
-# In class we learned about annealing your learning rate to get better convergence. We ALSO learned that with batch normalization you can use larger learning rates because it's more stable. Increase the starting learning rate to .1 and train for multiple rounds with successively smaller learning rates. Using just this model, what's the best performance you can get?
+# In class we learned about annealing your learning rate to get better convergence. We ALSO learned
+# that with batch normalization you can use larger learning rates because it's more stable. Increase
+# the starting learning rate to .1 and train for multiple rounds with successively smaller learning
+# rates. Using just this model, what's the best performance you can get?
 # Your answer:
 
+# 7.6 Question: What do you notice about training the convnet with/without batch normalization? How
+# does it affect convergence? How does it affect what magnitude of learning rate you can use? Write
+# down any observations from your experiments:
+# TODO: Your answer
