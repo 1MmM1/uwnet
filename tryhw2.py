@@ -62,9 +62,9 @@ print("test accuracy:     %f", accuracy_net(m, test))
 # 0.5454999804496765 (54.5%)
 # We can see just by comparing the training accuracies and test accuracies that adding
 # batch normalization makes our model do better (i.e. achieve a better train and test
-# accuracy) when using the same learning rate (0.01 in this case).
+# accuracy) when using the same learning rate (0.01 in this case) and hyperparameters.
 
-# Adding batch normalization also allows us to use higher learning rates without sacrificing
+# Adding batch normalization also allows us to use higher learning rates without sacrificing a lot of 
 # accuracy. When using a learning rate of 0.1, we get training accuracy of 0.5148199796676636 (51.4%) and
 # test accuracy of 0.5060999989509583 (50.6%). When we use the same learning rate with a regular convolutional
 # neural network, it only achieved an accuracy of ~39% on both test and training sets.
